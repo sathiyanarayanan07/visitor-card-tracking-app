@@ -19,3 +19,13 @@ class admin_user(models.Model):
     def __str__(self):
         return self.name
 
+class employee_user(models.Model):
+    username =models.CharField(max_length=100,null=True,blank=True)
+    email = models.EmailField(max_length=30,null=True,blank=True)
+    phone_number = models.CharField(max_length=30,null=True,blank=True)
+    password = models.CharField(max_length=30,null=True,blank=True)
+    role_type = models.CharField(max_length=100,null=True,blank=True,default="employee")
+
+
+    def __str__(self):
+        return self.username

@@ -8,6 +8,8 @@ urlpatterns = [
     path("get_user_details/",views.get_user_details,name="get_user_details"),
     path("user_update/<str:username>/",views.user_update,name="user_update"),
     path("user_delete/<str:email>/",views.user_delete,name="user_delete"),
-    path("admin_login/",views.admin_login,name="admin_login")
+    path("admin_login/",views.admin_login,name="admin_login"),
+    path("employee_register/",views.employee_register,name="employee_register"),
+    path("employee_login/",views.employee_login,name="employee_login")
  
 ]

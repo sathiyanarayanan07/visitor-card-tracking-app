@@ -2,7 +2,7 @@ from django.shortcuts import render
 from .serializers import userSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .models import user,admin_user
+from .models import user,admin_user,employee_user
 
 # Create your views here.
 
@@ -105,3 +105,55 @@ def admin_login(request):
     admin_instance =admin_user.objects.get(name=name,password=password)
     return Response({"msg":"admin login successfully"},status=200)
     
+
+@api_view(['POST'])
+def employee_register(request):
+    data = request.data
+    username = data.get("username")
+    email = data.get("email")
+    phone_number=data.get("phone_number")
+    password = data.get("password")
+    role_type =data.get("role_type")
+
+    if not username or not email or not phone_number or not password:
+        return Response({"msg":"please fill in all required fields"},status=404)
+    if role_type == "employee":
+        create_user =employee_user.objects.create(
+        username= username,
+        email=email,
+        phone_number=phone_number,
+        password=password
+        )
+    else:
+        return Response({"msg":"role type is invalid"},status=400)
+
+    return Response({"msg":"user register successfully",
+                     "username":username,
+                     "email":email,
+                     "phone_number":phone_number,
+                     "password":password ,
+                     "role_type":role_type},status=200)
+
+@api_view(["POST"])
+def employee_login(request):
+    data = request.data
+    username = data.get("username")
+    password = data.get("password")
+    role_type =data.get("role_type")
+
+    if not username or not password or not role_type:
+        return Response({"msg":"invalid credentials"},status=404)
+    try:
+        if role_type == "employee":
+            user_instance =employee_user.objects.get(
+            username=username,
+            password=password,
+            role_type=role_type
+            )
+        else:
+            return Response({"msg":"invalid role type"},status=400)
+    except user.DoesNotExist:
+        return Response({"msg":"employee not found or invalid credentails"},status=404)
+    return Response({"msg":"employee login successfully"},status=200)
+
+
